@@ -1,5 +1,7 @@
 # Install in a Python 3.11 or 3.12 virtual environment.
 # CrewAI uses its native Gemini integration and LiteLLM for Groq.
 crewai[litellm]>=1.0,<2.0
+# litellm 1.103+ imports mcp 2.x types on every completion; crewai pins mcp<2.
+litellm<1.103
 python-dotenv>=1.0,<2.0
 google-genai>=1.0,<2.0

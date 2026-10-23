@@ -32,6 +32,11 @@ BACKEND = ROOT / "api/feature.mjs"
 TESTS = ROOT / "tests/feature.acceptance.test.mjs"
 CONTRACT_TESTS = "tests/feature.contract.test.mjs"
 INDEPENDENT_DISCOUNT_TESTS = "tests/student-discount.independent.test.mjs"
+STARTER_TESTS = ROOT / "facilitator/starter/feature.acceptance.test.mjs"
+CONTRACT = (ROOT / "agent_demo/FEATURE_CONTRACT.md").read_text(encoding="utf-8")
+RUNS = ROOT / "runs"
+ROLES = {"Manager": "gemini", "Architect": "gemini", "QA": "gemini", "Backend": "groq", "Frontend": "groq"}
+DEFAULT_REQUEST = "Implement the student discount section in my cart."
 FEATURE_REQUEST = re.sub(r"\s+", " ", os.getenv("CAMPUSBITES_FEATURE_REQUEST") or DEFAULT_REQUEST).strip()[:1600]
 DISCOUNT_DEMO = os.getenv("CAMPUSBITES_STUDENT_DISCOUNT_DEMO", "").strip() == "1" or bool(
     re.search(r"STUDENT10|student.{0,35}(coupon|discount|offer)|(coupon|discount).{0,35}student|discount section", FEATURE_REQUEST, flags=re.I))
@@ -129,12 +134,21 @@ def failure_details(output, names):
     """Short assertion messages for the given failing tests, for agent feedback."""
     notes = []
     for name in names[:5]:
-        block = output.split(f"- {name}", 1)[-1][:900]
+        block = output.split(f"- {name}", 1)[-1][:1500]
         msg = re.search(r"error: \|?-?\s*\n?\s*(.+)", block)
         exp = re.search(r"expected: (.+)", block)
         act = re.search(r"actual: (.+)", block)
+        # Quote the failing assertion so the agent sees which field or value the test checks.
+        where = re.search(r"stack:.*?(tests/[\w.-]+\.mjs):(\d+):\d+", block, re.S)
+        line = ""
+        if where:
+            try:
+                line = (ROOT / where.group(1)).read_text(encoding="utf-8").splitlines()[int(where.group(2)) - 1].strip()
+            except (OSError, IndexError):
+                pass
         notes.append(f"- {name}: {(msg.group(1).strip() if msg else 'failed')[:160]}"
-                     + (f" (expected {exp.group(1)[:60]}, got {act.group(1)[:60]})" if exp and act else ""))
+                     + (f" (expected {exp.group(1)[:60]}, got {act.group(1)[:60]})" if exp and act else "")
+                     + (f" at `{line[:160]}`" if line else ""))
     return "\n".join(notes)
 
 
@@ -273,6 +287,14 @@ def main():
             original = llm.call
 
             def call(*args, **kwargs):
+                # CrewAI tags messages with "cache_breakpoint" but its LiteLLM path never strips it,
+                # and Groq rejects unknown message fields. Drop it on copies before sending.
+                if args and isinstance(args[0], list):
+                    args = ([{k: v for k, v in m.items() if k != "cache_breakpoint"} if isinstance(m, dict) else m
+                             for m in args[0]],) + args[1:]
+                elif isinstance(kwargs.get("messages"), list):
+                    kwargs["messages"] = [{k: v for k, v in m.items() if k != "cache_breakpoint"} if isinstance(m, dict) else m
+                                          for m in kwargs["messages"]]
                 for attempt in range(3):
                     if request_counts[provider] >= REQUEST_CAPS[provider]:
                         emit("System", "Model call budget exhausted", f"{provider}: {request_counts[provider]}/{REQUEST_CAPS[provider]}", "error")
@@ -389,7 +411,9 @@ def main():
                 "until tests pass; QA runs all tests; then COMPLETE. "
                 "Choose exactly one action from allowed_next_assignments. If both developers are allowed, pick the one whose "
                 "work the other depends on. If QA failed, read latest_tests and route one correction to the developer whose "
-                "tests fail ('API:' = Backend, 'UI:' = Frontend), or STOP if a correction is unlikely to help. "
+                "tests fail ('API:' = Backend, 'UI:' = Frontend). The write limit resets on every new assignment, so "
+                "code_write_counts never blocks a correction. While corrections_used < max_corrections, prefer a correction; "
+                "STOP only when no correction remains. "
                 "Never declare COMPLETE unless qa_passed is true. "
                 'Respond with ONLY JSON: {"assign":"Architect|QA|Backend|Frontend|COMPLETE|STOP","reason":"one evidence-based sentence"}. '
                 "Project state:\n" + json.dumps(evidence, ensure_ascii=False)
