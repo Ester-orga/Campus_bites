@@ -1,0 +1,5 @@
+{
+  "name":"campusbites-ai-team","private":true,"type":"module","version":"1.0.0",
+  "scripts":{"start":"node server.mjs","test":"node --test tests/*.test.mjs","check:starter":"node scripts/verify.mjs --starter","check:reference":"node scripts/verify.mjs --reference","check:current":"node scripts/verify.mjs --current","test:discount":"node --test tests/student-discount.independent.test.mjs"},
+  "engines":{"node":">=20"}
+}

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>CampusBites · Live AI Engineering Office</title><link rel="stylesheet" href="/office.css"/></head>
+<body>
+<header class="topbar">
+ <div class="brand"><span class="brand-icon">✦</span><div><strong>CampusBites</strong><small>AI ENGINEERING OFFICE</small></div></div>
+ <div class="top-right"><span class="live-dot"></span><span id="display-mode" class="mode-pill">WAITING FOR A RUN</span><span class="top-note">Powered by CrewAI · Groq + Gemini</span><a class="open-app" href="/" target="_blank" rel="noopener">Open food app ↗</a></div>
+</header>
+<div class="dashboard">
+ <aside class="mission side">
+   <div class="eyebrow">SPRINT 01 / YOUR FEATURE</div>
+   <h1>One manager.<br><em>Four builders.</em></h1>
+   <p class="lede">Describe a feature in plain English. A real AI manager hands it to four specialists: spec, tests first, then code until the tests pass.</p>
+   <div class="story-ticket"><div class="ticket-overline">THE FEATURE REQUEST</div><textarea id="feature-request" rows="5" maxlength="600" aria-label="Feature request" placeholder="Describe a feature for the shop in plain English…"></textarea><div class="preset-row" id="presets" aria-label="Example requests"></div><span class="ticket-foot">Student discount ticket: STUDENT10 · 10% · minimum ₹299 · maximum ₹100. These are business rules, not source-code instructions.</span></div>
+   <div class="small-title">SUPERVISOR → FOUR WORKERS · TEST-FIRST</div>
+   <div class="role-steps"><div><b>00</b><span>Manager routes and reviews every step</span></div><div><b>01</b><span>Architect writes the spec</span></div><div><b>02</b><span>QA writes failing tests first</span></div><div><b>03</b><span>Backend builds the API</span></div><div><b>04</b><span>Frontend builds the UI</span></div><div><b>05</b><span>QA runs every test</span></div></div>
+   <div class="small-title" style="margin-top:24px">CONTROL ROOM</div>
+   <button id="run" class="button primary"><span>▶</span> Start real agent run</button>
+   <button id="preview" class="button">▶ View scripted preview</button>
+   <div class="inline-actions"><button id="reset" class="button small">↶ Reset</button><button id="reference" class="button small">Apply reference</button></div>
+   <p class="tiny-note">Live execution requires your local Gemini and Groq API keys. The scripted preview never calls a model or edits code.</p>
+   <div class="small-status" id="credential-state">Checking provider configuration…</div>
+ </aside>
+ <main class="main-stage">
+  <div class="office-heading"><div><div class="eyebrow">A LIVE VIEW OF REAL TOOL EVENTS</div><h2>The engineering floor</h2></div><div id="run-indicator" class="run-indicator">READY</div></div>
+  <div class="office-room" id="office-room">
+   <div class="room-sign"><span class="tiny-led"></span> CAMPUSBITES · FIVE-AGENT FLOOR <span class="floor-signal" id="handoff-text">Select a desk to see its work</span></div>
+   <button class="desk manager-desk" data-agent="Manager" aria-label="Inspect AI project manager" aria-pressed="false">
+     <span class="desk-top"><span class="monitor-screen">LEAD</span><span class="desk-item">▤</span></span>
+     <span class="desk-avatar avatar-manager"><span class="hair"></span><span class="eyes">••</span></span>
+     <span class="agent-name">Morgan</span><span class="agent-title">MANAGER · GEMINI</span><span class="desk-state" id="floor-Manager">WAITING</span>
+   </button>
+   <div class="floor-grid">
+    <button class="desk" data-agent="Architect" aria-label="Inspect Architect" aria-pressed="true">
+      <span class="desk-top"><span class="monitor-screen">ARCH</span><span class="desk-item">▤</span></span>
+      <span class="desk-avatar avatar-blue"><span class="hair"></span><span class="eyes">••</span></span>
+      <span class="agent-name">Alex</span><span class="agent-title">ARCHITECT · GEMINI</span><span class="desk-state" id="floor-Architect">WAITING</span>
+    </button>
+    <button class="desk" data-agent="Backend" aria-label="Inspect Backend developer" aria-pressed="false">
+      <span class="desk-top"><span class="monitor-screen">API</span><span class="desk-item">▤</span></span>
+      <span class="desk-avatar avatar-orange"><span class="hair"></span><span class="eyes">••</span></span>
+      <span class="agent-name">Sam</span><span class="agent-title">BACKEND · GROQ</span><span class="desk-state" id="floor-Backend">WAITING</span>
+    </button>
+    <button class="desk" data-agent="Frontend" aria-label="Inspect Frontend developer" aria-pressed="false">
+      <span class="desk-top"><span class="monitor-screen">UI</span><span class="desk-item">▤</span></span>
+      <span class="desk-avatar avatar-teal"><span class="hair"></span><span class="eyes">••</span></span>
+      <span class="agent-name">Riya</span><span class="agent-title">FRONTEND · GROQ</span><span class="desk-state" id="floor-Frontend">WAITING</span>
+    </button>
+    <button class="desk" data-agent="QA" aria-label="Inspect QA engineer" aria-pressed="false">
+      <span class="desk-top"><span class="monitor-screen">TEST</span><span class="desk-item">▤</span></span>
+      <span class="desk-avatar avatar-purple"><span class="hair"></span><span class="eyes">••</span></span>
+      <span class="agent-name">Robin</span><span class="agent-title">QA · GEMINI</span><span class="desk-state" id="floor-QA">WAITING</span>
+    </button>
+   </div>
+   <div class="room-footer"><span class="room-plant">♣</span><span class="route-status" id="route-status">AWAITING A FEATURE REQUEST</span><span class="room-plant">♣</span></div>
+   <div class="handoff-bubble" id="handoff-bubble" role="status" aria-live="polite">✉ Task handed off</div>
+  </div>
+  <section class="mission-control" aria-label="Manager mission status">
+    <div><div class="eyebrow">MANAGER MISSION CONTROL</div><strong id="manager-current">Awaiting task assignment</strong><small id="manager-reason">Manager decisions and status appear after a genuine model run.</small></div>
+    <div class="manager-summary"><span id="manager-progress">0 / 4 specialists</span><span id="manager-retries">Corrections 0 / 1</span></div>
+  </section>
+  <div class="milestones"><div class="milestone"><span>01</span><strong>SPEC</strong><small>Gemini</small><div id="mile-Architect" class="milestone-marker"></div></div><div class="connector">→</div><div class="milestone"><span>02</span><strong>TESTS</strong><small>Gemini</small><div id="mile-Tests" class="milestone-marker"></div></div><div class="connector">→</div><div class="milestone"><span>03</span><strong>API</strong><small>Groq</small><div id="mile-Backend" class="milestone-marker"></div></div><div class="connector">→</div><div class="milestone"><span>04</span><strong>UI</strong><small>Groq</small><div id="mile-Frontend" class="milestone-marker"></div></div><div class="connector">→</div><div class="milestone"><span>05</span><strong>VERIFY</strong><small>Gemini</small><div id="mile-QA" class="milestone-marker"></div></div></div>
+  <section class="activity"><div class="section-row"><h3>Real activity timeline</h3><span id="event-count">0 events</span></div><div id="event-stream" class="event-stream" aria-live="polite"><div class="empty-log">Launch a run, or open the clearly labeled preview to understand the sequence.</div></div></section>
+ </main>
+ <aside class="evidence side">
+  <div class="evidence-title"><div><div class="eyebrow">CLICK AN AGENT'S DESK</div><h2>Work inspector</h2></div><a href="/api/audit" id="audit-link" target="_blank" rel="noopener" title="Open full evidence JSON">Audit ↗</a></div>
+  <div class="selected-role"><span class="selected-avatar" id="selected-avatar">◈</span><div><strong id="selected-name">Alex · Architect</strong><small id="selected-model">Gemini</small></div><span id="selected-status" class="selection-status">WAITING</span></div>
+  <p class="selected-work" id="selected-work">Turns the request into a spec with testable acceptance criteria.</p>
+  <div class="evidence-tabs" role="tablist" aria-label="Agent evidence"><button data-tab="activity" aria-selected="true">Activity</button><button data-tab="patch" aria-selected="false">Changes</button><button data-tab="tests" aria-selected="false">Tests</button></div>
+  <div id="evidence-message" class="evidence-message">Evidence shown here comes from the current execution. In preview mode, entries are simulated and clearly labeled.</div>
+  <div id="evidence-body" class="evidence-body"><div class="empty-evidence">Start a run to inspect code changes, agent outputs and actual test results.</div></div>
+  <div class="preview-header"><div><div class="eyebrow">THE ACTUAL APPLICATION</div><h2>Before → After</h2></div><span id="feature-result" class="feature-result">NOT TESTED</span></div>
+  <div class="preview-description">The shop before the run has no feature. After a passing live run, this preview reloads with whatever the team built.</div>
+  <div class="site-window"><div class="browser-bar"><span>● ● ●</span><span>CampusBites · localhost</span><button id="reload-app" aria-label="Reload food website">↻</button></div><iframe id="site-preview" title="Working CampusBites food website" src="/"></iframe></div>
+  <div class="footnote"><strong>Integrity check:</strong> a moving character is only visualization. Real evidence is the model-assigned event log, modified source diff, and independently executed tests. Reference mode is manual, not AI.</div>
+ </aside>
+</div>
+<div id="toast" class="toast" role="status"></div>
+<script type="module" src="/office.js"></script>
+</body></html>
