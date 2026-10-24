@@ -33,14 +33,14 @@ def parse_decision(text: str) -> dict:
 
 @dataclass
 class SupervisorState:
-    completed: set[str] = field(default_factory=set)
-    tests_written: bool = False
-    feasible: bool | None = None
-    qa_passed: bool | None = None
-    retry_count: int = 0
-    retry_worker: str | None = None
-    max_corrections: int = 1
-    closed: bool = False
+    completed: set[str] = field(default_factory=set)   # which workers finished
+    tests_written: bool = False                       # QA wrote failing tests yet?
+    feasible: bool | None = None                      # Architect's verdict
+    qa_passed: bool | None = None                     # last QA run result
+    retry_count: int = 0                              # corrections used
+    retry_worker: str | None = None                   # who is fixing right now
+    max_corrections: int = 1                          # budget (set once, never changes)
+    closed: bool = False                              # run finished
 
     def allowed(self) -> list[str]:
         if self.closed:
