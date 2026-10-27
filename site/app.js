@@ -1,5 +1,8 @@
 import {PRODUCTS, CATEGORIES, DELIVERY_FEE, FREE_DELIVERY_FROM} from './catalog.js';
 import {isInstalled, buildView, summaryLines, filterProducts} from './feature-runtime.js';
+import {initThemeToggle} from './theme.js';
+
+initThemeToggle();
 
 const foodGrid=document.getElementById('food-grid');
 const bagItems=document.getElementById('bag-items');

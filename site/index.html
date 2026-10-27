@@ -4,13 +4,21 @@
   <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="theme-color" content="#fffaf5"/>
   <title>CampusBites — Good food. Great study breaks.</title>
+  <script>
+    (function(){
+      try{
+        var t=localStorage.getItem('campusbites-theme')||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+        document.documentElement.setAttribute('data-theme',t);
+      }catch(e){}
+    })();
+  </script>
   <link rel="stylesheet" href="/styles.css"/>
 </head>
 <body>
   <header class="topbar"><div class="topbar-inner">
     <a href="#home" class="logo" aria-label="CampusBites home"><span class="logo-symbol">✳</span><span>campus<span class="brand-alt">bites</span></span><span class="logo-point">.</span></a>
     <nav aria-label="Main navigation"><a href="#menu" class="nav-active">Explore</a><a href="#how">How it works</a><a href="#about">About us</a></nav>
-    <div class="nav-actions"><div class="delivery-location"><span class="location-icon">⌖</span><div><small>Delivering to</small><strong>Campus Main Gate</strong></div><span class="location-chevron">⌄</span></div><button id="cart-toggle" class="cart-trigger" aria-label="Open bag"><span>Bag</span><span class="bag-count" id="bag-count">0</span></button></div>
+    <div class="nav-actions"><div class="delivery-location"><span class="location-icon">⌖</span><div><small>Delivering to</small><strong>Campus Main Gate</strong></div><span class="location-chevron">⌄</span></div><button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle theme" title="Toggle theme"><span class="theme-icon">🌙</span><span class="theme-label">Dark</span></button><button id="cart-toggle" class="cart-trigger" aria-label="Open bag"><span>Bag</span><span class="bag-count" id="bag-count">0</span></button></div>
   </div></header>
   <main id="home" class="shell">
     <div class="announcement"><span class="ann-pill">CAMPUS SPECIAL</span><span>Free delivery on your first order over ₹399</span><span>→</span></div>

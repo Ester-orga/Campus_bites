@@ -1,3 +1,6 @@
+import {initThemeToggle} from '/theme.js';
+initThemeToggle();
+
 const logEl=document.getElementById('event-log'),modeEl=document.getElementById('mode-badge');let last='';
 function notice(msg){const el=document.getElementById('notice');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),3200)}
 async function send(path){try{const r=await fetch(path,{method:'POST'});const body=await r.json();if(!r.ok||!body.ok)notice(body.error||'Action could not be started');else notice(path.endsWith('preview')?'Scripted preview started':path.endsWith('run')?'Real Gemini + Groq crew requested':path.endsWith('reset')?'Starter reset': 'Reference solution applied manually');document.getElementById('app-frame').src='/?v='+Date.now()}catch(e){notice('Server unavailable: '+e.message)}}

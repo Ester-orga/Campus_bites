@@ -1,3 +1,6 @@
+import {initThemeToggle} from '/theme.js';
+initThemeToggle();
+
 const $ = (id) => document.getElementById(id);
 const roleInfo = {
   Manager: {name:'Morgan',full:'Morgan · Manager / Orchestrator',model:'Gemini 3.5 Flash-Lite',work:'Reads the evidence after every step, picks the next specialist from the allowed moves, and stops when tests fail twice.',symbol:'♟'},

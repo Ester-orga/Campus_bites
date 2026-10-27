@@ -49,6 +49,7 @@ if '--probe' in __import__('sys').argv:
             continue
         req = urllib.request.Request(url,data=json.dumps(payload).encode('utf-8'),headers={
             'Content-Type':'application/json',
+            'User-Agent':'CampusBites/1.0',
             **({'Authorization':'Bearer '+key} if name=='Groq' else {'x-goog-api-key':key})},method='POST')
         try:
             with urllib.request.urlopen(req,timeout=18) as response:
