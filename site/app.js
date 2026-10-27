@@ -90,4 +90,5 @@ drawer.addEventListener('click',e=>{const inc=e.target.closest('[data-inc]'); co
 if(e.target.closest('#checkout-button')){const dialog=document.getElementById('checkout-dialog');document.getElementById('order-number').textContent=`#CB-${String(Math.floor(Math.random()*9000)+1000)}`;bag={};persist();renderBag();renderFoods();closeBag();dialog.showModal()}
 });
 document.getElementById('cart-toggle').addEventListener('click',showBag);overlay.addEventListener('click',closeBag);
+document.getElementById('bag-close')?.addEventListener('click',closeBag);
 renderCategories();renderFoods();renderBag();

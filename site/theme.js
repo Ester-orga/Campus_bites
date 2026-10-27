@@ -7,6 +7,7 @@ export function initThemeToggle() {
 
   function getTheme() {
     return document.documentElement.getAttribute('data-theme') ||
+      document.body?.getAttribute('data-theme') ||
       localStorage.getItem('campusbites-theme') ||
       (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
   }
@@ -14,22 +15,14 @@ export function initThemeToggle() {
   function updateButton(theme) {
     if (!toggleBtn) return;
     const isDark = theme === 'dark';
-    const icon = toggleBtn.querySelector('.theme-icon');
     const label = toggleBtn.querySelector('.theme-label');
-    if (icon) icon.textContent = isDark ? '☀️' : '🌙';
-    if (label) label.textContent = isDark ? 'Light' : 'Dark';
+    if (label) label.textContent = isDark ? 'Dark' : 'Light';
     toggleBtn.setAttribute('title', isDark ? 'Switch to light mode' : 'Switch to dark mode');
     toggleBtn.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+    toggleBtn.setAttribute('aria-checked', isDark ? 'true' : 'false');
   }
 
-  function applyTheme(theme) {
-    document.documentElement.setAttribute('data-theme', theme);
-    try {
-      localStorage.setItem('campusbites-theme', theme);
-    } catch (e) {}
-    updateButton(theme);
-
-    // Notify any embedded iframe preview (like site-preview or app-frame)
+  function broadcastToFrames(theme) {
     const iframes = document.querySelectorAll('iframe');
     for (const frame of iframes) {
       try {
@@ -38,25 +31,62 @@ export function initThemeToggle() {
     }
   }
 
+  function applyTheme(theme) {
+    const valid = theme === 'dark' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', valid);
+    document.documentElement.classList.toggle('dark', valid === 'dark');
+    if (document.body) {
+      document.body.setAttribute('data-theme', valid);
+      document.body.classList.toggle('dark', valid === 'dark');
+    }
+    try {
+      localStorage.setItem('campusbites-theme', valid);
+    } catch (e) {}
+    updateButton(valid);
+    broadcastToFrames(valid);
+  }
+
   const initial = getTheme();
   applyTheme(initial);
 
-  toggleBtn?.addEventListener('click', () => {
+  toggleBtn?.addEventListener('click', (e) => {
+    e.preventDefault();
     const next = getTheme() === 'dark' ? 'light' : 'dark';
     applyTheme(next);
   });
 
-  // Sync when changed in another tab
+  // Keep iframes synchronized as soon as they finish loading
+  const iframes = document.querySelectorAll('iframe');
+  for (const frame of iframes) {
+    frame.addEventListener('load', () => {
+      try {
+        frame.contentWindow?.postMessage({ type: 'campusbites-theme-change', theme: getTheme() }, '*');
+      } catch (e) {}
+    });
+  }
+
+  // Cross-tab synchronization
   window.addEventListener('storage', (e) => {
     if (e.key === 'campusbites-theme' && (e.newValue === 'light' || e.newValue === 'dark')) {
       applyTheme(e.newValue);
     }
   });
 
-  // Listen for postMessage from parent or iframe
+  // Cross-frame messaging
   window.addEventListener('message', (e) => {
     if (e.data?.type === 'campusbites-theme-change' && (e.data.theme === 'light' || e.data.theme === 'dark')) {
       applyTheme(e.data.theme);
+    } else if (e.data?.type === 'campusbites-request-theme') {
+      try {
+        e.source?.postMessage({ type: 'campusbites-theme-change', theme: getTheme() }, '*');
+      } catch (err) {}
     }
   });
+
+  // If inside an iframe, request the current theme from parent
+  if (window.parent && window.parent !== window) {
+    try {
+      window.parent.postMessage({ type: 'campusbites-request-theme' }, '*');
+    } catch (e) {}
+  }
 }

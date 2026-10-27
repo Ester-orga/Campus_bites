@@ -18,7 +18,7 @@
   <header class="topbar"><div class="topbar-inner">
     <a href="#home" class="logo" aria-label="CampusBites home"><span class="logo-symbol">✳</span><span>campus<span class="brand-alt">bites</span></span><span class="logo-point">.</span></a>
     <nav aria-label="Main navigation"><a href="#menu" class="nav-active">Explore</a><a href="#how">How it works</a><a href="#about">About us</a></nav>
-    <div class="nav-actions"><div class="delivery-location"><span class="location-icon">⌖</span><div><small>Delivering to</small><strong>Campus Main Gate</strong></div><span class="location-chevron">⌄</span></div><button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle theme" title="Toggle theme"><span class="theme-icon">🌙</span><span class="theme-label">Dark</span></button><button id="cart-toggle" class="cart-trigger" aria-label="Open bag"><span>Bag</span><span class="bag-count" id="bag-count">0</span></button></div>
+    <div class="nav-actions"><div class="delivery-location"><span class="location-icon">⌖</span><div><small>Delivering to</small><strong>Campus Main Gate</strong></div><span class="location-chevron">⌄</span></div><button id="theme-toggle" class="theme-toggle" type="button" role="switch" aria-label="Toggle theme" title="Toggle theme"><span class="theme-toggle-track"><span class="theme-toggle-thumb"><span class="theme-icon-sun">☀️</span><span class="theme-icon-moon">🌙</span></span></span><span class="theme-label">Dark</span></button><button id="cart-toggle" class="cart-trigger" aria-label="Open bag"><span>Bag</span><span class="bag-count" id="bag-count">0</span></button></div>
   </div></header>
   <main id="home" class="shell">
     <div class="announcement"><span class="ann-pill">CAMPUS SPECIAL</span><span>Free delivery on your first order over ₹399</span><span>→</span></div>
@@ -32,7 +32,7 @@
       <div class="category-tabs" id="category-tabs" role="group" aria-label="Food categories"></div>
       <div class="menu-meta"><span><strong id="result-count">6</strong> dishes worth your break</span><span class="food-tag"><span class="mini-dot"></span> All dishes made fresh</span></div>
       <div class="content-layout"><div class="food-grid" id="food-grid" aria-live="polite"></div>
-        <aside class="bag-panel" id="bag-panel" aria-label="Your order"><div class="bag-header"><div><span class="eyebrow small-eyebrow">GOOD CHOICE</span><h3>Your bag <span id="bag-item-count">(0)</span></h3></div><span class="bag-icon">♧</span></div><div id="bag-items" class="bag-items"></div><div id="bag-summary" class="bag-summary"></div></aside>
+        <aside class="bag-panel" id="bag-panel" aria-label="Your order"><div class="bag-header"><div><span class="eyebrow small-eyebrow">GOOD CHOICE</span><h3>Your bag <span id="bag-item-count">(0)</span></h3></div><div class="bag-header-actions"><button id="bag-close" class="bag-close-btn" aria-label="Close bag">✕</button><span class="bag-icon">♧</span></div></div><div id="bag-items" class="bag-items"></div><div id="bag-summary" class="bag-summary"></div></aside>
       </div>
     </section>
     <section class="footer-banner" id="about"><div><span class="eyebrow small-eyebrow">A LITTLE SOMETHING EXTRA</span><h2>Fuel your next<br/><em>big idea.</em></h2><p>Food for hackathons, deadlines and everything in between.</p></div><div class="footer-sticker">STUDY<br/>SNACK<br/>REPEAT<span>✳</span></div></section>
